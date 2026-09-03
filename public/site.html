@@ -44,7 +44,7 @@
 
 /* ══ HERO ══ */
 .hs-hero{padding:100px 0 80px;text-align:center;position:relative;overflow:hidden;background:var(--bg)}
-.hs-hero::after{content:"";position:absolute;left:0;right:0;top:0;height:var(--hs-ace-h,620px);background:linear-gradient(to bottom,rgba(113,8,2,.10) 0%,rgba(90,6,2,.22) 55%,rgba(40,4,2,.72) 84%,var(--bg) 100%), url('assets/ace-red.jpg') center top/cover no-repeat, radial-gradient(120% 80% at 50% 0%, #8a0a03 0%, #710802 45%, #4a0502 100%);background-color:#710802;z-index:0;pointer-events:none}
+.hs-hero::after{content:"";position:absolute;left:0;right:0;top:0;height:var(--hs-ace-h,620px);background:linear-gradient(to bottom,rgba(113,8,2,.10) 0%,rgba(90,6,2,.22) 55%,rgba(40,4,2,.72) 84%,var(--bg) 100%), radial-gradient(120% 80% at 50% 0%, #8a0a03 0%, #710802 45%, #4a0502 100%);background-color:#710802;z-index:0;pointer-events:none}
 .hs-hero>*{position:relative;z-index:1}
 
 /* Parallax orbs */
@@ -201,17 +201,17 @@ video::-webkit-media-controls-fullscreen-button{display:inline-block}
 .hs-pacote__age{margin-top:14px;display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.1em;color:var(--accent);border:1px solid rgba(139,92,246,.4);padding:4px 12px;border-radius:20px}
 
 /* Bonus */
-.hs-bonus-stack{margin:24px auto 0;max-width:520px;padding:24px 26px;background:rgba(139,92,246,.07);border:1.5px dashed rgba(139,92,246,.5);text-align:left;border-radius:6px;position:relative}
-.hs-bonus-stack__title{font-family:var(--serif);font-size:20px;color:var(--accent);font-weight:600;margin-bottom:18px;text-align:center;letter-spacing:.02em}
+.hs-bonus-stack{margin:24px auto 0;max-width:520px;padding:24px 26px;background:rgba(255,255,255,.04);border:1.5px dashed rgba(255,255,255,.25);text-align:left;border-radius:6px;position:relative}
+.hs-bonus-stack__title{font-family:var(--serif);font-size:20px;color:#fff;font-weight:600;margin-bottom:18px;text-align:center;letter-spacing:.02em}
 .hs-bonus-stack__list{list-style:none;display:flex;flex-direction:column;gap:16px}
-.hs-bonus-stack__list li{display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:14.5px;color:var(--text);border-bottom:1px dashed rgba(139,92,246,.18);padding-bottom:14px}
+.hs-bonus-stack__list li{display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:14.5px;color:var(--text);border-bottom:1px dashed rgba(255,255,255,.12);padding-bottom:14px}
 .hs-bonus-stack__list li:last-child{border-bottom:none;padding-bottom:0}
 .hs-bonus-stack__item{display:flex;align-items:center;gap:14px}
 /* SVG ebook icon container */
-.hs-bonus-stack__icon{flex-shrink:0;width:42px;height:42px;background:linear-gradient(135deg,rgba(61,15,23,.9) 0%,rgba(90,15,26,.8) 100%);border:1px solid rgba(139,92,246,.35);border-radius:8px;display:flex;align-items:center;justify-content:center}
-.hs-bonus-stack__icon svg{width:20px;height:20px;color:var(--accent)}
+.hs-bonus-stack__icon{flex-shrink:0;width:42px;height:42px;background:linear-gradient(135deg,rgba(61,15,23,.9) 0%,rgba(90,15,26,.8) 100%);border:1px solid rgba(255,255,255,.2);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.hs-bonus-stack__icon svg{width:20px;height:20px;color:#fff}
 .hs-bonus-stack__list s{color:var(--text-mute);font-weight:300;margin-right:6px}
-.hs-bonus-stack__list strong{color:#34d399;font-weight:700;letter-spacing:.05em;font-size:12.5px;background:rgba(52,211,153,.12);padding:3px 8px;border-radius:10px;flex-shrink:0}
+.hs-bonus-stack__list strong{color:#fff;font-weight:700;letter-spacing:.05em;font-size:12.5px;background:rgba(255,255,255,.1);padding:3px 8px;border-radius:10px;flex-shrink:0}
 .hs-bonus-stack__foot{margin-top:16px;font-size:13px;color:var(--text-mute);text-align:center}
 .hs-bonus-stack__foot strong{color:var(--accent);font-weight:600}
 
@@ -760,15 +760,14 @@ html,body{margin:0;padding:0}
 
 /* Oferta — fundo harmônico vermelho com imagem */
 .hs-pacote{background:radial-gradient(120% 90% at 50% 0%,#4a0d16 0%,#28080e 55%,#120a0c 100%)!important;padding-top:72px!important;position:relative;overflow:hidden}
-.hs-pacote__bg{position:absolute;inset:0;background:url('assets/oferta-bg.jpg') center/cover no-repeat;opacity:.32;filter:saturate(1.15) contrast(1.05)}
-.hs-pacote__bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,10,12,.55) 0%,rgba(74,13,22,.35) 45%,rgba(18,10,12,.92) 100%)}
+
 .hs-pacote .hs-container{position:relative;z-index:1}
 .hs-pacote__card{background:linear-gradient(160deg,rgba(74,13,22,.88) 0%,rgba(29,8,13,.92) 100%)!important;backdrop-filter:blur(3px)}
 
 /* Bônus alinhados */
 .hs-bonus-stack__list li{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:14px;text-align:left}
 .hs-bonus-stack__item{display:contents}
-.hs-bonus-stack__cover{width:44px;height:58px;border-radius:5px;overflow:hidden;border:1px solid rgba(139,92,246,.35)}
+.hs-bonus-stack__cover{width:44px;height:58px;border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,.2)}
 .hs-bonus-stack__cover img{width:100%;height:100%;object-fit:cover;display:block}
 .hs-bonus-stack__list li>span:not(.hs-bonus-stack__item){line-height:1.4}
 .hs-bonus-stack__list strong{justify-self:end}
@@ -901,7 +900,8 @@ html,body{margin:0;padding:0}
   .hs-root .hs-hero__title{animation:none!important;-webkit-text-fill-color:#e6f3ff!important;color:#e6f3ff!important;background:none!important}}
 
 .hs-root .hs-pq2__title{
-  text-transform:uppercase!important;
+  text-transform:none!important;
+  color:#fff!important;
   text-align:center!important;
   margin-left:auto!important;margin-right:auto!important;
   font-size:clamp(21.6px,3.06vw,34.2px)!important;
@@ -1008,14 +1008,14 @@ html,body{margin:0;padding:0}
   <div class="hs-pq2__scrim"></div>
   <div class="hs-container">
     <div class="hs-pq2__inner">
-      <h2 class="hs-pq2__title">Esses cursos foram feitos para você que <em>quer</em>:</h2>
+      <h2 class="hs-pq2__title">esses cursos foram feitos para você que <em>quer</em>:</h2>
       <ul class="hs-pq2__ul">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>Ter um poder único nas mãos. Conhecimentos ocultos.</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>Dominar língua, mãos e corpo como armas no sexo.</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>Possuir dezenas de técnicas e movimentos únicos.</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>Dominar o seu valor e fazer elas correrem atrás de você.</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>Ser melhor que todos os homens ao redor e dominar uma confiança estrondosa.</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>100% em vídeo, técnicas únicas desenvolvidas por sexólogas e anos de pesquisas.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>Técnicas Avançadas de Orgasmo.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>Técnicas de fazer ela se tremer.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>Movimentos que ninguém sabe.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>estar no nível dos 10% do mundo.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>Aumentar o seu valor.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span>Ter uma confiança única.</span></li>
       </ul>
     </div>
   </div>
@@ -1023,7 +1023,6 @@ html,body{margin:0;padding:0}
 
 <!-- PACOTE COMBO -->
 <section class="hs-pacote" id="pacote">
-  <div class="hs-pacote__bg"></div>
   <div class="hs-container">
     <div class="hs-pacote__card hs-reveal--scale hs-reveal">
       <div class="hs-launch-zone">
@@ -1259,8 +1258,7 @@ html,body{margin:0;padding:0}
       <div class="hs-founder__body hs-reveal hs-reveal--d1">
         <div class="hs-founder__tag">Sobre o criador</div>
         <h2 class="hs-founder__name">Ítalo <em>Cavalcanti</em></h2>
-        <h3 class="hs-founder__h">Uma década estudando o que ninguém estuda a sério</h3>
-        <h3 class="hs-founder__h">Um método de execução, não de teoria</h3>
+        <p class="hs-founder__text">Formado em fisiologia aplicada e com passagens por clínicas de saúde íntima na Europa, reuni o que aprendi com terapeutas, ginecologistas, sexólogas e centenas de conversas reais com mulheres. Um método de execução, não de teoria.</p>
       </div>
     </div>
   </div>
