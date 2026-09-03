@@ -593,7 +593,7 @@ html,body{margin:0;padding:0}
 }
 
 
-/* ══ [PATCH] MOBILE-FIRST — correções de layout, escala e legibilidade ══ */
+/* ══ [PATCH] MOBILE-FIRST — correções de layout, escala e legibilidade ��═ */
 /* título do hero: garante que nunca fique invisível (clip-path travado) */
 .hs-hero__title,.hs-hero--revealed .hs-hero__title,.hs-hero__textwrap.hs-text-in .hs-hero__title{clip-path:none!important}
 .hs-hero__textwrap.hs-text-in .hs-hero__title{animation:hs-fade-up .9s ease-out both}
@@ -744,8 +744,9 @@ html,body{margin:0;padding:0}
 .hs-lote{max-width:520px;margin:22px auto 0;padding:16px 18px;border:1px solid rgba(255,255,255,.28);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.09) 0%,rgba(207,214,219,.05) 100%);text-align:left;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .hs-lote__top{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12.5px;letter-spacing:.06em;color:var(--accent)}
 .hs-lote__tag{text-transform:uppercase;font-weight:600}
-.hs-lote__bar{margin-top:11px;height:8px;border-radius:99px;background:rgba(255,255,255,.24);border:1px solid rgba(255,255,255,.35);overflow:hidden;display:block}
-.hs-lote__fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#9aa4ab,#eef3f7);transition:width .8s cubic-bezier(.2,.7,.2,1)}
+.hs-lote__bar{margin-top:11px;height:9px;border-radius:99px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.48);overflow:hidden;display:block;box-shadow:0 0 12px rgba(103,232,249,.18)}
+.hs-lote__fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#67e8f9 0%,#eef3f7 42%,#cfd6db 68%,#67e8f9 100%);background-size:200% 100%;transition:width .8s cubic-bezier(.2,.7,.2,1);animation:hs-lote-shimmer 2.4s linear infinite}
+@keyframes hs-lote-shimmer{from{background-position:0% 50%}to{background-position:200% 50%}}
 .hs-lote__foot{margin-top:10px;font-size:12.5px;color:var(--text-mute)}
 .hs-lote__foot b{color:#fff;font-weight:600}
 .hs-lote__live{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
@@ -793,7 +794,8 @@ html,body{margin:0;padding:0}
 .hs-proof__inner{position:relative;z-index:1}
 .hs-proof__num{color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.95)}
 .hs-proof__label{color:#e6cfc8;text-shadow:0 1px 10px rgba(0,0,0,.95)}
-.hs-proof__label strong{color:var(--accent)}
+.hs-proof__label strong{color:var(--nude)!important}
+.hs-pq2__title{font-family:var(--serif)!important;font-size:clamp(18px,3.8vw,26px)!important;letter-spacing:.01em;line-height:1.35}
 @media(max-width:640px){
   .hs-proof{padding:52px 0}
   .hs-proof__inner{flex-direction:column;gap:22px}
@@ -1634,7 +1636,7 @@ html,body{margin:0;padding:0}
   function startChat(){
     if(chatStarted) return; chatStarted=true;
     const msgs=[
-      [500,"Olá! Tudo bem? 😊 Seja muito bem-vindo ao HotSecrets!"],
+      [500,"Ol��! Tudo bem? 😊 Seja muito bem-vindo ao HotSecrets!"],
       [900,"Aqui você pode tirar qualquer dúvida sobre os cursos, os bônus, o acesso — estou à disposição para ajudar! 🙌"],
       [700,"O que você gostaria de saber? Escolha uma das opções abaixo 👇"]
     ];
