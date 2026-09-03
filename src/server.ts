@@ -18,6 +18,27 @@ async function getServerEntry(): Promise<ServerEntry> {
   return serverEntryPromise;
 }
 
+let siteHtmlCache: string | null = null;
+
+async function getSiteHtml(): Promise<string> {
+  if (siteHtmlCache !== null) return siteHtmlCache;
+  const fs = await import("node:fs");
+  const path = await import("node:path");
+  const file = path.resolve("public/site.html");
+  try {
+    siteHtmlCache = fs.readFileSync(file, "utf-8");
+  } catch {
+    siteHtmlCache = "";
+  }
+  return siteHtmlCache;
+}
+
+function isHtmlRequest(url: URL): boolean {
+  const p = url.pathname;
+  if (p === "/" || p === "/site.html") return true;
+  return false;
+}
+
 // h3 swallows in-handler throws into a normal 500 Response with body
 // {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
 async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
@@ -47,6 +68,19 @@ function isH3SwallowedErrorBody(body: string): boolean {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const url = new URL(request.url);
+
+      // Serve the landing page HTML directly for the root and /site.html routes
+      if (isHtmlRequest(url) && request.method === "GET") {
+        const html = await getSiteHtml();
+        if (html) {
+          return new Response(html, {
+            status: 200,
+            headers: { "content-type": "text/html; charset=utf-8" },
+          });
+        }
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
