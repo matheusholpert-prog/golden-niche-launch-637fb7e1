@@ -1809,65 +1809,50 @@ html,body{margin:0;padding:0}
   function buildHtml(){
     var rest=st.rest;
     return '<div class="hs-lote__top">'+
-        '<span class="hs-lote__tag">1º lote · R$ '+PRECO+'</span>'+
+        '<span class="hs-lote__tag">1\u00ba lote \u00b7 R$ '+PRECO+'</span>'+
         '<span class="hs-lote__live"><span class="hs-lote__dot"></span><b data-lote-rest>'+rest+'</b> de '+TOTAL+' vagas</span>'+
       '</div>'+
       '<div class="hs-lote__bar"><span class="hs-lote__fill" data-lote-fill style="width:0%"></span></div>'+
-      '<div class="hs-lote__foot">Quando as vagas acabarem, o 2º lote passa para <b>R$ '+PRECO2+'</b>.</div>';
+      '<div class="hs-lote__foot">Quando as vagas acabarem, o 2\u00ba lote passa para <b>R$ '+PRECO2+'</b>.</div>';
   }
 
-  /* Render inicial — todas as barras começam em 0% */
+  /* Render inicial — todas as barras em 0% */
   els.forEach(function(el){el.innerHTML=buildHtml()});
   document.querySelectorAll('[data-cta-price]').forEach(function(a){
-    a.textContent='Garantir meu acesso — R$ '+PRECO;
+    a.textContent='Garantir meu acesso \u2014 R$ '+PRECO;
   });
 
-  var animated=false;
-  function animateBar(el){
-    var fill=el.querySelector('[data-lote-fill]');
-    var bar=el.querySelector('.hs-lote__bar');
-    if(!fill||!bar)return;
+  /* Anima\u00e7\u00e3o simples e \u00e0 prova de falhas:
+     1. Aguarda o DOM estar pronto + o age gate fechar
+     2. Seta width para o valor real — o CSS transition cuida do resto */
+  function fillBars(){
     var pct=getPct();
-    bar.classList.add('is-filling');
-    requestAnimationFrame(function(){
-      requestAnimationFrame(function(){
-        fill.style.width=pct+'%';
-      });
+    document.querySelectorAll('.hs-lote__bar').forEach(function(bar){
+      bar.classList.add('is-filling');
+    });
+    document.querySelectorAll('[data-lote-fill]').forEach(function(f){
+      f.style.width=pct+'%';
     });
   }
 
-  function startLoteAnimation(){
-    if(animated)return;
-    animated=true;
-    /* Pequeno delay para o age gate terminar de fechar */
-    setTimeout(function(){
-      if('IntersectionObserver'in window){
-        var io=new IntersectionObserver(function(entries){
-          entries.forEach(function(e){
-            if(e.isIntersecting){
-              animateBar(e.target);
-              io.unobserve(e.target);
-            }
-          });
-        },{threshold:0.2});
-        els.forEach(function(b){io.observe(b)});
-        /* Fallback: se não disparar em 4s, anima tudo */
-        setTimeout(function(){
-          els.forEach(function(el){
-            var f=el.querySelector('[data-lote-fill]');
-            if(f&&f.style.width==='0%')animateBar(el);
-          });
-        },4000);
-      }else{
-        els.forEach(animateBar);
-      }
-    },300);
+  /* Tenta v\u00e1rias vezes at\u00e9 conseguir \u2014 cobre age gate, iframe, timing */
+  var attempts=0;
+  function tryFill(){
+    /* Verifica se o age gate ainda est\u00e1 vis\u00edvel */
+    var gate=document.getElementById('hs-age');
+    if(gate && gate.style.display!=='none' && attempts<20){
+      attempts++;
+      setTimeout(tryFill,300);
+      return;
+    }
+    /* Age gate fechado (ou tentativas esgotadas) \u2014 anima agora */
+    setTimeout(fillBars,200);
   }
 
-  /* Escuta o evento do age gate para iniciar a animação */
-  window.addEventListener('hs-age-ok',startLoteAnimation);
-  /* Fallback: se o evento já disparou ou não existir, inicia em 3s */
-  setTimeout(startLoteAnimation,5000);
+  /* Inicia ap\u00f3s um pequeno delay para o DOM assentar */
+  setTimeout(tryFill,500);
+  /* Fallback extra ap\u00f3s 8s caso nada tenha funcionado */
+  setTimeout(function(){fillBars();},8000);
 
   setInterval(function(){
     if(st.rest<=MIN)return;
