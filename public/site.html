@@ -744,8 +744,11 @@ html,body{margin:0;padding:0}
 .hs-lote{max-width:520px;margin:22px auto 0;padding:16px 18px;border:1px solid rgba(139,92,246,.22);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.05) 0%,rgba(0,0,0,.35) 100%);text-align:left;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .hs-lote__top{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12.5px;letter-spacing:.06em;color:var(--accent)}
 .hs-lote__tag{text-transform:uppercase;font-weight:600}
-.hs-lote__bar{margin-top:11px;height:6px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden}
-.hs-lote__fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#9aa4ab,#eef3f7);transition:width .8s cubic-bezier(.2,.7,.2,1)}
+.hs-lote__bar{margin-top:11px;height:8px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden;position:relative}
+.hs-lote__fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#8a969d,#c9d4db 40%,#eef3f7);transition:width 1.2s cubic-bezier(.2,.7,.2,1);position:relative;overflow:hidden;box-shadow:0 0 8px rgba(207,214,219,.4)}
+.hs-lote__fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.6) 50%,transparent 100%);transform:translateX(-100%);animation:hs-lote-sweep 2s ease-in-out infinite}
+@keyframes hs-lote-sweep{0%{transform:translateX(-100%)}60%,100%{transform:translateX(200%)}}
+.hs-lote__bar.is-filling .hs-lote__fill{box-shadow:0 0 12px rgba(207,214,219,.6),0 0 24px rgba(207,214,219,.3)}
 .hs-lote__foot{margin-top:10px;font-size:12.5px;color:var(--text-mute)}
 .hs-lote__foot b{color:#fff;font-weight:600}
 .hs-lote__live{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
@@ -1802,25 +1805,52 @@ if(document.readyState!=='loading')f();else document.addEventListener('DOMConten
   if(!els.length)return;
 
   function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
-  function render(){
+  function render(animate){
     var rest=st.rest, vendidas=TOTAL-rest;
     var pct=Math.min(100,Math.round(vendidas/TOTAL*100));
+    var fillW=animate?0:pct;
     var html='<div class="hs-lote__top">'+
         '<span class="hs-lote__tag">1º lote · R$ '+PRECO+'</span>'+
         '<span class="hs-lote__live"><span class="hs-lote__dot"></span><b data-lote-rest>'+rest+'</b> de '+TOTAL+' vagas</span>'+
       '</div>'+
-      '<div class="hs-lote__bar"><span class="hs-lote__fill" style="width:'+pct+'%"></span></div>'+
+      '<div class="hs-lote__bar"><span class="hs-lote__fill" style="width:'+fillW+'%"></span></div>'+
       '<div class="hs-lote__foot">Quando as vagas acabarem, o 2º lote passa para <b>R$ '+PRECO2+'</b>.</div>';
     els.forEach(function(el){el.innerHTML=html});
     document.querySelectorAll('[data-cta-price]').forEach(function(a){
       a.textContent='Garantir meu acesso — R$ '+PRECO;
     });
+    if(animate){
+      requestAnimationFrame(function(){
+        setTimeout(function(){
+          document.querySelectorAll('.hs-lote__bar').forEach(function(bar){
+            bar.classList.add('is-filling');
+            var fill=bar.querySelector('.hs-lote__fill');
+            if(fill) fill.style.width=pct+'%';
+          });
+        },60);
+      });
+    }
   }
-  render();
+  function initLoteReveal(){
+    if(!('IntersectionObserver'in window)){render(false);return}
+    var seen=false;
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting&&!seen){
+          seen=true;
+          render(true);
+          io.disconnect();
+        }
+      });
+    },{threshold:0.3});
+    els.forEach(function(b){io.observe(b)});
+    setTimeout(function(){if(!seen){seen=true;render(false)}},2500);
+  }
+  initLoteReveal();
   setInterval(function(){
     if(st.rest<=MIN)return;
     st.rest-=1; save();
-    render();
+    render(false);
     document.querySelectorAll('[data-lote-rest]').forEach(function(b){
       b.classList.remove('hs-lote__pop'); void b.offsetWidth; b.classList.add('hs-lote__pop');
     });
