@@ -744,11 +744,11 @@ html,body{margin:0;padding:0}
 .hs-lote{max-width:520px;margin:22px auto 0;padding:16px 18px;border:1px solid rgba(139,92,246,.22);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.05) 0%,rgba(0,0,0,.35) 100%);text-align:left;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .hs-lote__top{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12.5px;letter-spacing:.06em;color:var(--accent)}
 .hs-lote__tag{text-transform:uppercase;font-weight:600}
-.hs-lote__bar{margin-top:11px;height:8px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden;position:relative}
-.hs-lote__fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#8a969d,#c9d4db 40%,#eef3f7);transition:width 1.2s cubic-bezier(.2,.7,.2,1);position:relative;overflow:hidden;box-shadow:0 0 8px rgba(207,214,219,.4)}
-.hs-lote__fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.6) 50%,transparent 100%);transform:translateX(-100%);animation:hs-lote-sweep 2s ease-in-out infinite}
-@keyframes hs-lote-sweep{0%{transform:translateX(-100%)}60%,100%{transform:translateX(200%)}}
-.hs-lote__bar.is-filling .hs-lote__fill{box-shadow:0 0 12px rgba(207,214,219,.6),0 0 24px rgba(207,214,219,.3)}
+.hs-lote__bar{margin-top:11px;height:10px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden;position:relative}
+.hs-lote__fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#7a868d,#b9c6cf 30%,#eef3f7 70%,#ffffff);transition:width 1.8s cubic-bezier(.2,.7,.2,1);position:relative;overflow:hidden;box-shadow:0 0 6px rgba(207,214,219,.3)}
+.hs-lote__fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.55) 50%,transparent 100%);transform:translateX(-100%);animation:hs-lote-sweep 2.2s ease-in-out infinite}
+@keyframes hs-lote-sweep{0%{transform:translateX(-100%)}55%,100%{transform:translateX(250%)}}
+.hs-lote__bar.is-filling .hs-lote__fill{box-shadow:0 0 10px rgba(207,214,219,.5),0 0 20px rgba(207,214,219,.25)}
 .hs-lote__foot{margin-top:10px;font-size:12.5px;color:var(--text-mute)}
 .hs-lote__foot b{color:#fff;font-weight:600}
 .hs-lote__live{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
@@ -1452,21 +1452,26 @@ html,body{margin:0;padding:0}
     });
   }
 
+  function fireAgeOk(){
+    window.dispatchEvent(new CustomEvent('hs-age-ok'));
+  }
   if (ageOk) {
     gate.style.display='none';
     document.getElementById('hs-veil').style.display='none';
-    // Em retorno, pula só a cortina cinematográfica — o texto continua esperando o scroll normalmente
     const hero = document.querySelector('.hs-hero');
     if (hero) hero.classList.add('hs-hero--revealed');
+    fireAgeOk();
     init();
+  } else {
+    ok.addEventListener('click', () => {
+      try { sessionStorage.setItem('hs_age_ok','1'); } catch(e){}
+      gate.style.display='none';
+      ageOk = true;
+      revealHero();
+      fireAgeOk();
+      init();
+    });
   }
-  ok.addEventListener('click', () => {
-    try { sessionStorage.setItem('hs_age_ok','1'); } catch(e){}
-    gate.style.display='none';
-    ageOk = true;
-    revealHero();
-    init();
-  });
 
   /* ── VIDEO ── */
   const vw = document.getElementById('hs-vw');
@@ -1790,11 +1795,6 @@ html,body{margin:0;padding:0}
 })();
 </script>
 <script>
-(function(){function f(){var h=document.querySelector('.hs-hero'),st=document.querySelector('.hs-hero__stage');if(!h||!st)return;var r=st.getBoundingClientRect(),hr=h.getBoundingClientRect();h.style.setProperty('--hs-ace-h',Math.round(r.bottom-hr.top+56)+'px')}
-if(document.readyState!=='loading')f();else document.addEventListener('DOMContentLoaded',f);window.addEventListener('load',f);window.addEventListener('resize',f)})();
-</script>
-
-<script>
 /* ── Contador de lote (limpo e direto) ───────────────────── */
 (function(){
   var TOTAL=1000, PRECO=55, PRECO2=89, START=172, TICK=30000, MIN=7;
@@ -1805,54 +1805,80 @@ if(document.readyState!=='loading')f();else document.addEventListener('DOMConten
   if(!els.length)return;
 
   function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
-  function render(animate){
-    var rest=st.rest, vendidas=TOTAL-rest;
-    var pct=Math.min(100,Math.round(vendidas/TOTAL*100));
-    var fillW=animate?0:pct;
-    var html='<div class="hs-lote__top">'+
+  function getPct(){return Math.min(100,Math.round((TOTAL-st.rest)/TOTAL*100));}
+  function buildHtml(){
+    var rest=st.rest;
+    return '<div class="hs-lote__top">'+
         '<span class="hs-lote__tag">1º lote · R$ '+PRECO+'</span>'+
         '<span class="hs-lote__live"><span class="hs-lote__dot"></span><b data-lote-rest>'+rest+'</b> de '+TOTAL+' vagas</span>'+
       '</div>'+
-      '<div class="hs-lote__bar"><span class="hs-lote__fill" style="width:'+fillW+'%"></span></div>'+
+      '<div class="hs-lote__bar"><span class="hs-lote__fill" data-lote-fill style="width:0%"></span></div>'+
       '<div class="hs-lote__foot">Quando as vagas acabarem, o 2º lote passa para <b>R$ '+PRECO2+'</b>.</div>';
-    els.forEach(function(el){el.innerHTML=html});
-    document.querySelectorAll('[data-cta-price]').forEach(function(a){
-      a.textContent='Garantir meu acesso — R$ '+PRECO;
-    });
-    if(animate){
+  }
+
+  /* Render inicial — todas as barras começam em 0% */
+  els.forEach(function(el){el.innerHTML=buildHtml()});
+  document.querySelectorAll('[data-cta-price]').forEach(function(a){
+    a.textContent='Garantir meu acesso — R$ '+PRECO;
+  });
+
+  var animated=false;
+  function animateBar(el){
+    var fill=el.querySelector('[data-lote-fill]');
+    var bar=el.querySelector('.hs-lote__bar');
+    if(!fill||!bar)return;
+    var pct=getPct();
+    bar.classList.add('is-filling');
+    requestAnimationFrame(function(){
       requestAnimationFrame(function(){
-        setTimeout(function(){
-          document.querySelectorAll('.hs-lote__bar').forEach(function(bar){
-            bar.classList.add('is-filling');
-            var fill=bar.querySelector('.hs-lote__fill');
-            if(fill) fill.style.width=pct+'%';
+        fill.style.width=pct+'%';
+      });
+    });
+  }
+
+  function startLoteAnimation(){
+    if(animated)return;
+    animated=true;
+    /* Pequeno delay para o age gate terminar de fechar */
+    setTimeout(function(){
+      if('IntersectionObserver'in window){
+        var io=new IntersectionObserver(function(entries){
+          entries.forEach(function(e){
+            if(e.isIntersecting){
+              animateBar(e.target);
+              io.unobserve(e.target);
+            }
           });
-        },60);
-      });
-    }
+        },{threshold:0.2});
+        els.forEach(function(b){io.observe(b)});
+        /* Fallback: se não disparar em 4s, anima tudo */
+        setTimeout(function(){
+          els.forEach(function(el){
+            var f=el.querySelector('[data-lote-fill]');
+            if(f&&f.style.width==='0%')animateBar(el);
+          });
+        },4000);
+      }else{
+        els.forEach(animateBar);
+      }
+    },300);
   }
-  function initLoteReveal(){
-    if(!('IntersectionObserver'in window)){render(false);return}
-    var seen=false;
-    var io=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if(e.isIntersecting&&!seen){
-          seen=true;
-          render(true);
-          io.disconnect();
-        }
-      });
-    },{threshold:0.3});
-    els.forEach(function(b){io.observe(b)});
-    setTimeout(function(){if(!seen){seen=true;render(false)}},2500);
-  }
-  initLoteReveal();
+
+  /* Escuta o evento do age gate para iniciar a animação */
+  window.addEventListener('hs-age-ok',startLoteAnimation);
+  /* Fallback: se o evento já disparou ou não existir, inicia em 3s */
+  setTimeout(startLoteAnimation,5000);
+
   setInterval(function(){
     if(st.rest<=MIN)return;
     st.rest-=1; save();
-    render(false);
+    var pct=getPct();
     document.querySelectorAll('[data-lote-rest]').forEach(function(b){
+      b.textContent=st.rest;
       b.classList.remove('hs-lote__pop'); void b.offsetWidth; b.classList.add('hs-lote__pop');
+    });
+    document.querySelectorAll('[data-lote-fill]').forEach(function(f){
+      f.style.width=pct+'%';
     });
   },TICK);
 })();
